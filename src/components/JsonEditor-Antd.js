@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Row, Col, Card, Button } from 'antd'
-import { DownSquareFilled, CloseOutlined, RightSquareFilled, FileTextOutlined } from '@ant-design/icons'
+import { DownSquareFilled, CloseOutlined, RightSquareFilled, FontSizeOutlined, FieldNumberOutlined, OrderedListOutlined } from '@ant-design/icons'
 
 const JSON_OBJ = {
   "ENLIGHT_FEED_REQUEST_SCHEMA": {
@@ -167,9 +167,9 @@ function KeyCard(props) {
     return (<></>)
   }
 
-  let icon
+  let typeIcon
   if (obj[param].type === "object") {
-    icon = (
+    typeIcon = (
       <Button
         icon={isKeySelected ? <DownSquareFilled /> : <RightSquareFilled />}
         size='small'
@@ -179,16 +179,34 @@ function KeyCard(props) {
       />
     )
   } else if (obj[param].type === "string") {
-    icon = (
+    let icon
+    switch (obj[param].type) {
+      case 'string': {
+        icon = (<FontSizeOutlined />)
+        break
+      }
+      case 'number': {
+        icon = (<FieldNumberOutlined />)
+        break
+      }
+      case 'array': {
+        icon = (<OrderedListOutlined />)
+        break
+      }
+      default: {
+        icon = (<></>)
+      }
+    }
+    typeIcon = (
       <Button
-        icon={<FileTextOutlined />}
+        icon={icon}
         size='small'
         style={{ color: 'grey', fontSize: 12 }}
         type="text"
       />
     )
   } else {
-    icon = (<></>)
+    typeIcon = (<></>)
   }
 
   return (
@@ -216,7 +234,7 @@ function KeyCard(props) {
           justifyContent: "start", /* Distributes space between items */
           alignItems: "center"
         }}>
-          {icon}
+          {typeIcon}
           <span style={{ margin: 0, marginLeft: '10px', fontSize: 14, fontWeight: 300 }}>{param}</span>
           {obj[param]?.properties &&
             <span style={{
