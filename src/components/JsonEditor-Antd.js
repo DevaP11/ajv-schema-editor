@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Row, Col, Card } from 'antd'
-import { DownSquareFilled, CloseOutlined } from '@ant-design/icons'
+import { Row, Col, Card, Button } from 'antd'
+import { DownSquareFilled, CloseOutlined, RightSquareFilled, FileTextOutlined } from '@ant-design/icons'
 
 const JSON_OBJ = {
   "ENLIGHT_FEED_REQUEST_SCHEMA": {
@@ -158,6 +158,95 @@ const addLineNumbersAndStringify = (jsonObject) => {
   ));
 };
 
+
+function KeyCard(props) {
+  const { obj, param } = props
+  const [isKeySelected, setIsKeySelected] = useState(false)
+  if (!obj[param]) {
+    console.log({ param, obj })
+    return (<></>)
+  }
+
+  let icon
+  if (obj[param].type === "object") {
+    icon = (
+      <Button
+        icon={isKeySelected ? <DownSquareFilled /> : <RightSquareFilled />}
+        size='small'
+        onClick={() => { setIsKeySelected(!isKeySelected) }}
+        style={{ color: 'grey', fontSize: 12 }}
+        type="text"
+      />
+    )
+  } else if (obj[param].type === "string") {
+    icon = (
+      <Button
+        icon={<FileTextOutlined />}
+        size='small'
+        style={{ color: 'grey', fontSize: 12 }}
+        type="text"
+      />
+    )
+  } else {
+    icon = (<></>)
+  }
+
+  return (
+    <>
+      <Card
+        style={{
+          width: '97%',
+          height: '5.5vh',
+          marginTop: '20px',
+          borderRadius: '2px',
+          padding: '8px 12px',
+          background: '#fff',
+          boxShadow: 'none',
+          border: '1px solid #d9d9d9',
+        }}
+        styles={{
+          body: {
+            padding: 0
+          }
+        }}
+      >
+        <div style={{
+          display: "flex", /* Makes the container a flex container */
+          flexDirection: "row", /* Items are displayed horizontally (default) */
+          justifyContent: "start", /* Distributes space between items */
+          alignItems: "center"
+        }}>
+          {icon}
+          <span style={{ margin: 0, marginLeft: '10px', fontSize: 14, fontWeight: 300 }}>{param}</span>
+          {obj[param]?.properties &&
+            <span style={{
+              marginLeft: 'auto',
+              marginBottom: '2px',
+              fontSize: 14,
+              color: 'grey'
+            }}>{`{ ${Object.keys(obj[param].properties).length} }`}</span>}
+          <Button
+            icon={<CloseOutlined />}
+            size='small'
+            style={{
+              marginLeft: Boolean(obj[param]?.properties) ? '10px' : 'auto',
+              color: 'grey',
+              fontSize: 14
+            }}
+            type="text"
+          />
+        </div>
+      </Card>
+      {isKeySelected &&
+        typeof (obj[param]) === "object"
+        && Object.keys(obj[param].properties)
+          .map(internalKey => {
+            return <KeyCard obj={obj[param].properties} param={internalKey} />
+          })}
+    </>
+  )
+}
+
 const JsonEditor = () => {
   return (
     <div style={{ position: 'relative', height: '100vh', padding: '10vh 0 0 10vh' }}>
@@ -179,7 +268,7 @@ const JsonEditor = () => {
             {  /**
             HTML Pre Tag -
             Pre Tag stands for preformatted text. It displays the text exactly as it was written in HTML code.  */}
-            <pre>{addLineNumbersAndStringify(preRenderJson(JSON_OBJ))}</pre>
+            <pre>{addLineNumbersAndStringify(preRenderJson(JSON.parse(JSON.stringify(JSON_OBJ))))}</pre>
           </Card>
         </Col>
         <Col>
@@ -195,47 +284,16 @@ const JsonEditor = () => {
             }}
           >
             <span style={{ fontWeight: 500 }}>Edit JSON</span>
-            {Object.keys(JSON_OBJ)
-              .map(key => {
-                return (
-                  <Card
-                    style={{
-                      width: '97%',
-                      height: '5.5vh',
-                      marginTop: '20px',
-                      borderRadius: '2px',
-                      padding: '8px 12px',
-                      background: '#fff',
-                      boxShadow: 'none',
-                      border: '1px solid #d9d9d9',
-                    }}
-                    styles={{
-                      body: {
-                        padding: 0
-                      }
-                    }}
-                  >
-                    <div style={{
-                      display: "flex", /* Makes the container a flex container */
-                      flexDirection: "row", /* Items are displayed horizontally (default) */
-                      justifyContent: "start", /* Distributes space between items */
-                      alignItems: "center"
-                    }}>
-                      <DownSquareFilled
-                        style={{ color: 'grey', fontSize: 14, marginTop: 2 }}
-                      />
-                      <span style={{ margin: 0, marginLeft: '10px', fontSize: 14, fontWeight: 300 }}>{key}</span>
-                      <span style={{
-                        marginLeft: 'auto',
-                        marginTop: 0,
-                        fontSize: 14,
-                        color: 'grey'
-                      }}>{`{ ${Object.keys(JSON_OBJ[key]).length} }`}</span>
-                      <CloseOutlined style={{ marginLeft: '10px', color: 'grey', fontSize: 12, marginTop: 2 }} />
-                    </div>
-                  </Card>
-                )
-              })}
+            <>
+              {Object.keys(JSON_OBJ)
+                .map(key => {
+                  // return keyCard({ obj: JSON_OBJ, key: key, })
+                  return <KeyCard
+                    obj={JSON_OBJ}
+                    param={key}
+                  />
+                })}
+            </>
           </Card>
         </Col>
       </Row>
