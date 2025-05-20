@@ -1,441 +1,13 @@
 import { useState } from 'react';
-import { Row, Col, Card, Button } from 'antd'
+import { Row, Col, Card, Button, } from 'antd'
 import {
-  DownSquareFilled, CloseOutlined, RightSquareFilled, BoldOutlined,
+  DownSquareFilled, EditOutlined, RightSquareFilled, BoldOutlined,
   FontSizeOutlined, FieldNumberOutlined, OrderedListOutlined, PlusOutlined
 } from '@ant-design/icons'
+import { EditKey } from './EditKey'
 
-const JSON_OBJ = {
-  "ENLIGHT_FEED_RESPONSE_SCHEMA": {
-    "additionalProperties": false,
-    "type": "object",
-    "properties": {
-      "content": {
-        "additionalProperties": false,
-        "type": "array",
-        "items": {
-          "additionalProperties": false,
-          "type": "object",
-          "properties": {
-            "uid": {
-              "type": "string"
-            },
-            "streamUrl": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "parentAssetId": {
-              "type": "string"
-            },
-            "parentAssetType": {
-              "type": "string"
-            },
-            "seasonUid": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "title": {
-              "type": "string"
-            },
-            "originalTitle": {
-              "type": "string"
-            },
-            "description": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "shortDescription": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "episodeNumber": {
-              "anyOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "releaseYear": {
-              "anyOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "director": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "personId": {
-                    "type": "string"
-                  },
-                  "personName": {
-                    "type": "string"
-                  },
-                  "creditType": {
-                    "type": "string"
-                  }
-                },
-                "required": []
-              }
-            },
-            "actor": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "personId": {
-                    "type": "string"
-                  },
-                  "personName": {
-                    "type": "string"
-                  },
-                  "creditType": {
-                    "type": "string"
-                  }
-                },
-                "required": []
-              }
-            },
-            "genre": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "displayDuration": {
-              "type": "number"
-            },
-            "progress": {
-              "type": "number"
-            },
-            "showAlert": {
-              "type": "boolean"
-            },
-            "duration": {
-              "type": "number"
-            },
-            "type": {
-              "type": "string"
-            },
-            "categoryId": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "streams": {
-              "type": "string"
-            },
-            "seriesUid": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "downloadUrl": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "trailers": {
-              "type": "array",
-              "items": {
-                "additionalProperties": false,
-                "type": "object",
-                "properties": {
-                  "streams": {
-                    "type": "string"
-                  },
-                  "mediaType": {
-                    "type": "string",
-                    "enum": [
-                      "bonus",
-                      "trailer"
-                    ]
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "images": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "additionalProperties": false,
-                      "properties": {
-                        "url": {
-                          "type": "string"
-                        },
-                        "width": {
-                          "type": "number"
-                        },
-                        "height": {
-                          "type": "number"
-                        },
-                        "type": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "url",
-                        "width",
-                        "height"
-                      ]
-                    }
-                  }
-                }
-              }
-            },
-            "mediaGuid": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "availableOn": {
-              "anyOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "availableTill": {
-              "anyOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "availableDays": {
-              "anyOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "isCcAvailable": {
-              "type": "boolean"
-            },
-            "checkSums": {
-              "type": "object",
-              "properties": {
-                "type": "string"
-              }
-            },
-            "streamingUrl": {
-              "type": "string"
-            },
-            "format": {
-              "type": "string"
-            },
-            "isDownloadable": {
-              "type": "boolean"
-            },
-            "contentGuid": {
-              "type": "string"
-            },
-            "parentalControl": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "rating": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  },
-                  "ratingTag": {
-                    "type": "array",
-                    "items": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            },
-            "isCastable": {
-              "type": "boolean"
-            },
-            "countries": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "images": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "url": {
-                    "type": "string"
-                  },
-                  "width": {
-                    "type": "number"
-                  },
-                  "height": {
-                    "type": "number"
-                  },
-                  "type": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "url",
-                  "width",
-                  "height"
-                ]
-              }
-            },
-            "purchaseMode": {
-              "type": "string"
-            },
-            "maxQualityAvailable": {
-              "type": "string"
-            },
-            "studio": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "championship": {
-              "type": "string"
-            },
-            "assetTypeIcon": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "url": {
-                    "type": "string"
-                  },
-                  "width": {
-                    "type": "number"
-                  },
-                  "height": {
-                    "type": "number"
-                  },
-                  "type": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "url",
-                  "width",
-                  "height"
-                ]
-              }
-            },
-            "tags": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "displayTag": {
-              "type": "string"
-            },
-            "mediatype": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "title",
-            "uid"
-          ]
-        }
-      },
-      "totalElements": {
-        "type": "integer"
-      },
-      "totalCount": {
-        "type": "integer"
-      },
-      "totalPages": {
-        "type": "integer"
-      }
-    },
-    "required": [
-      "content",
-      "totalElements",
-      "totalPages",
-      "totalCount"
-    ]
-  }
-}
-
-const preRenderJson = (obj) => {
+const preRenderJson = (input) => {
+  let obj = JSON.parse(JSON.stringify(input))
   if (typeof obj !== 'object' || obj === null) {
     return obj;
   }
@@ -553,7 +125,7 @@ const addLineNumbersAndStringify = (jsonObject) => {
 
 
 function KeyCard(props) {
-  const { obj, param, level = 0 } = props
+  const { obj, param, level = 0, setIsEditModalVisible, setEditingPath, path = [] } = props
   const [isKeySelected, setIsKeySelected] = useState(false)
   if (!obj[param]) {
     console.log({ param, obj })
@@ -622,6 +194,7 @@ function KeyCard(props) {
   }
 
   const fontSize = 14 - level
+  const fullPath = [...path, "properties", param]
   const children = obj[param].properties || obj[param].items?.properties
   return (
     <div style={{ position: "relative" }}>
@@ -671,8 +244,9 @@ function KeyCard(props) {
               color: 'grey'
             }}>{`{ ${Object.keys(children).length} }`}</span>}
           <Button
-            icon={<CloseOutlined />}
+            icon={<EditOutlined />}
             size='small'
+            onClick={() => { setIsEditModalVisible(true) && setEditingPath(fullPath); }}
             style={{
               marginLeft: Boolean(obj[param]?.properties) ? '10px' : 'auto',
               color: 'grey',
@@ -688,9 +262,12 @@ function KeyCard(props) {
             <>
               <KeyCard
                 key={internalKey}
+                setEditingPath={setEditingPath}
                 obj={children}
+                path={fullPath}
                 param={internalKey}
                 level={level + 1}
+                setIsEditModalVisible={setIsEditModalVisible}
               />
               {index === Object.keys(children)?.length - 1 &&
                 <Card
@@ -731,10 +308,22 @@ function KeyCard(props) {
   )
 }
 
-
-const JsonEditor = () => {
+const JsonEditor = ({ schema }) => {
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false)
+  const [edittedSchema, updateSchema] = useState(schema)
+  const [editingPath, setEditingPath] = useState([]);
   return (
     <div style={{ position: 'relative', height: '100vh', padding: '10vh 0 0 10vh' }}>
+      <EditKey
+        isVisible={isEditModalVisible}
+        schema={edittedSchema}
+        path={editingPath}
+        onClose={() => { setIsEditModalVisible(false) }}
+        onConfirm={(newKeyData) => {
+          updateSchema({ ...newKeyData }); // Force re-render with updated schema
+        }}
+      />
+
       <Row >
         <Col>
           <Card
@@ -755,7 +344,7 @@ const JsonEditor = () => {
             {  /**
             HTML Pre Tag -
             Pre Tag stands for preformatted text. It displays the text exactly as it was written in HTML code.  */}
-            <pre>{addLineNumbersAndStringify(preRenderJson(JSON.parse(JSON.stringify(JSON_OBJ))))}</pre>
+            <pre>{addLineNumbersAndStringify(preRenderJson(edittedSchema))}</pre>
           </Card>
         </Col>
         <Col>
@@ -774,12 +363,14 @@ const JsonEditor = () => {
           >
             <span style={{ fontWeight: 500 }}>Edit JSON</span>
             <>
-              {Object.keys(JSON_OBJ)
+              {Object.keys(edittedSchema)
                 .map(key => {
                   // return keyCard({ obj: JSON_OBJ, key: key, })
                   return <KeyCard
-                    obj={JSON_OBJ}
+                    obj={edittedSchema}
+                    setEditingPath={setEditingPath}
                     param={key}
+                    setIsEditModalVisible={setIsEditModalVisible}
                   />
                 })}
             </>
