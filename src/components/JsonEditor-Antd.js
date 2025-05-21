@@ -194,7 +194,6 @@ function KeyCard(props) {
   }
 
   const fontSize = 14 - level
-  const fullPath = [...path, "properties", param]
   const children = obj[param].properties || obj[param].items?.properties
   return (
     <div style={{ position: "relative" }}>
@@ -246,7 +245,7 @@ function KeyCard(props) {
           <Button
             icon={<EditOutlined />}
             size='small'
-            onClick={() => { setIsEditModalVisible(true) && setEditingPath(fullPath); }}
+            onClick={() => { setIsEditModalVisible(true) && setEditingPath([...path, "properties", param]); }}
             style={{
               marginLeft: Boolean(obj[param]?.properties) ? '10px' : 'auto',
               color: 'grey',
@@ -264,7 +263,7 @@ function KeyCard(props) {
                 key={internalKey}
                 setEditingPath={setEditingPath}
                 obj={children}
-                path={fullPath}
+                path={[...path, "properties", param]}
                 param={internalKey}
                 level={level + 1}
                 setIsEditModalVisible={setIsEditModalVisible}

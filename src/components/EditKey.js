@@ -11,6 +11,7 @@ const { Text } = Typography
 
 
 export function EditKey({ isVisible, onClose, schema, onConfirm, path }) {
+  console.log("EditKey-params", { isVisible, onClose, schema, onConfirm, path })
   const [isNullable, setIsNullable] = useState(false);
   const [selectedTypes, setSelectedTypes] = useState(["string"]);
   const [properties, setProperties] = useState([]);
